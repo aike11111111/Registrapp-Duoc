@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Recuperar Contraseña</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="resetForm" (ngSubmit)="resetPassword()">
+    <ion-item>
+      <ion-input 
+        formControlName="email" 
+        type="email" 
+        label="Correo Electrónico:" 
+        labelPlacement="floating" 
+        placeholder="Ingresa tu correo">
+      </ion-input>
+    </ion-item>
+
+    <ion-text position="stacked" color="danger" *ngIf="resetForm.get('email')?.hasError('required')">
+      El correo es obligatorio
+    </ion-text>
+
+    <ion-text position="stacked" color="danger" *ngIf="resetForm.get('email')?.hasError('email')">
+      El correo es invalido
+    </ion-text>
+
+    <ion-item>
+      <ion-input 
+        formControlName="newPassword" 
+        type="password" 
+        label="Nueva Contraseña:" 
+        labelPlacement="floating" 
+        placeholder="Ingresa tu nueva contraseña">
+      </ion-input>
+    </ion-item>
+
+    <ion-text position="stacked" color="danger" *ngIf="resetForm.get('newPassword')?.hasError('required')">
+      La nueva contraseña es obligatoria
+    </ion-text>
+
+    <ion-button expand="full" color="light" type="submit" [disabled]="resetForm.invalid">Recuperar</ion-button>
+  </form>
+</ion-content>
+  

@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Asignaturas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="tipoUsuario === 'docente'">
+    <ion-list *ngIf="asignaturas.length > 0; else noAsignaturas">
+      <ion-item *ngFor="let asignatura of asignaturas" [routerLink]="['/secciones', asignatura.aid]">
+        <ion-label>
+          <h2>{{ asignatura.nombre_asignatura }}</h2>
+          <p>ID: {{ asignatura.aid }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ng-template #noAsignaturas>
+      <ion-item>
+        <ion-label>
+          <h2>No hay asignaturas disponibles para este docente.</h2>
+        </ion-label>
+      </ion-item>
+    </ng-template>
+  </div>
+
+  <div *ngIf="tipoUsuario === 'alumno'">
+    <ion-list *ngIf="asignaturas.length > 0; else noAsignaturasAlumno">
+      <ion-item *ngFor="let asignatura of asignaturas" [routerLink]="['/secciones', asignatura.aid]">
+        <ion-label>
+          <h2>{{ asignatura.nombre_asignatura }}</h2>
+          <p>ID: {{ asignatura.aid }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ng-template #noAsignaturasAlumno>
+      <ion-item>
+        <ion-label>
+          <h2>No hay asignaturas disponibles para este alumno.</h2>
+        </ion-label>
+      </ion-item>
+    </ng-template>
+  </div>
+</ion-content>

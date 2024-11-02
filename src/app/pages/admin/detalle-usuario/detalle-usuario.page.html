@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>detalle-usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title> {{ userEmail }} </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <h2>Tipo Usuario: {{ userTipo }} </h2>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <img alt="Silhouette of mountains" src="assets/img/asistenciaaa.png" />
+    <ion-card-header>
+      <ion-card-title>Agregar Asignatura</ion-card-title>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <p></p>
+      <ion-button expand="full" color="light" routerLink="/gestionar-asignaturas">
+        <ion-icon slot="start" name="eye"></ion-icon>
+        Ver 
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <img alt="Silhouette of mountains" src="assets/img/asistenciaaa.png" />
+    <ion-card-header>
+      <ion-card-title>Agregar Seccion</ion-card-title>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <p></p>
+      <ion-button expand="full" color="light" routerLink="/crear-seccion">
+        <ion-icon slot="start" name="eye"></ion-icon>
+        Ver 
+      </ion-button>
+    </ion-card-content>
+  </ion-card>  
+</ion-content>

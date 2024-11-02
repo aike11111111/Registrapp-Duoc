@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Gestionar Asignaturas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="agregarAsignaturaForm" (ngSubmit)="guardarAsignatura()">
+    <ion-item>
+      <ion-label position="floating">Nombre de la Asignatura</ion-label>
+      <ion-input formControlName="nombre"></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="floating">Descripción</ion-label>
+      <ion-input formControlName="descripcion"></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" type="submit" [disabled]="agregarAsignaturaForm.invalid">
+      Guardar Asignatura
+    </ion-button>
+  </form>
+</ion-content>

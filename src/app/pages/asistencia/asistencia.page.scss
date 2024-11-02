@@ -1,0 +1,16 @@
+ion-toolbar {
+  display: flex;
+  justify-content: space-between; /* Alinea el título a la izquierda y el botón a la derecha */
+  align-items: center; /* Centra verticalmente los elementos dentro del toolbar */
+  --background: #000000; /* Cambia el color del fondo de la barra de herramientas */
+  color: white; /* Color del texto en la barra de herramientas */
+}
+
+.button-asistencia {
+  margin-right: 16px; /* Ajusta el margen para darle un poco de espacio del borde */
+}
+
+ion-card{
+  background-color: #000000;
+  border-radius: 20px;
+}

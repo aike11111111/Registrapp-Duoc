@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Crear Sección</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!--<form [formGroup]="crearSeccionForm" (ngSubmit)="guardarSeccion()">!-->
+    <ion-item>
+      <ion-label position="stacked">Nombre de la Sección</ion-label>
+      <ion-input formControlName="nombreSeccion" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Asignatura</ion-label>
+      <ion-select formControlName="idAsignatura" required>
+        <ion-select-option *ngFor="let asignatura of asignaturas" [value]="asignatura.aid">
+          {{ asignatura.nombre_asignatura }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Horario</ion-label>
+      <ion-input formControlName="horario" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Sala</ion-label>
+      <ion-input formControlName="sala" required></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" type="submit">Crear Sección</ion-button>
+ 

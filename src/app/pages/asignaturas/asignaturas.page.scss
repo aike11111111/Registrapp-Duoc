@@ -1,0 +1,30 @@
+/* Estilo para las imágenes dentro de las tarjetas */
+ion-card img {
+    width: 100%; 
+    height: auto; 
+    object-fit: cover;
+    border-top-left-radius: 20px; 
+    border-top-right-radius: 20px; 
+  }
+  
+ 
+  ion-card {
+    margin: 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    overflow: hidden; 
+    background-color: #08080852;
+  }
+  
+  ion-card-title{
+    font-size: 20px;
+  }
+  
+  ion-list{
+    background-color: rgb(34, 33, 33);
+  }
+
+  ion-toolbar {
+    --background: #000000; 
+    color: white;
+  }

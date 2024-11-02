@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Alumnos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="card-spacing">
+    <ion-card-header>
+      <ion-card-title>Hola, {{ usuarioLogin }} </ion-card-title>
+    </ion-card-header>
+  
+    <ion-card-content>
+      Bienvenido al sistema, estamos felices de tenerte aquí.
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="card-spacing">
+    <img alt="Silhouette of mountains" src="assets/img/asistenciaaa.png" />
+    <ion-card-header>
+      <ion-card-title>Asistencia</ion-card-title>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <p></p>
+      <ion-button expand="full" color="light" routerLink="/asistencia">
+        <ion-icon slot="start" name="eye"></ion-icon>
+        Ver 
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+  <ion-card class="card-spacing">
+    <img alt="Silhouette of mountains" src="assets/img/asignaturas.png" />
+    <ion-card-header>
+      <ion-card-title>Horario</ion-card-title>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <p></p>
+      <ion-button expand="full" color="light" routerLink="/horario">
+        <ion-icon slot="start" name="eye"></ion-icon>
+        Ver 
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

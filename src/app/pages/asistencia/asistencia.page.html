@@ -1,0 +1,23 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home-docente"></ion-back-button>
+    </ion-buttons>
+    
+    <ion-title>Asistencia</ion-title>
+    
+    <ion-buttons slot="end">
+      <ion-button routerLink="/asignaturas">
+        <ion-icon name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-card>    
+      <ion-card-content>
+        Aquí podras visualizar tu historial de asistencias
+      </ion-card-content>
+    </ion-card>
+</ion-content>

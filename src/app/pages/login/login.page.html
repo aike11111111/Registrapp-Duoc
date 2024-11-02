@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+    
+</ion-header>
+
+<ion-content>
+  <img alt="Silhouette of mountains" src="/assets/img/logo.png" />
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Ingreso al sistema</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content [formGroup]="loginForm">
+      <ion-item>
+        <ion-input formControlName="email" [(ngModel)]="emailValue" type="email" label="Usuario:" labelPlacement="floating" placeholder="Enter text"></ion-input>
+      </ion-item>
+    
+      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('email')?.hasError('required')">
+        El correo es obligatorio
+      </ion-text>
+
+      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('email')?.hasError('email')">
+        El correo es invalido
+      </ion-text>
+
+      <ion-item>
+        <ion-input formControlName="pass" [(ngModel)]="passValue" type="password" label="Contraseña:" labelPlacement="floating" placeholder="Enter text"></ion-input>
+      </ion-item>
+
+      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('pass')?.hasError('required')">
+        La contraseña es obligatoria
+      </ion-text>
+
+      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('pass')?.hasError('minlength')">
+        La contraseña debe tener mínimo 6 caracteres
+      </ion-text>
+
+      <ion-button expand="full" color="light" (click)="login()" class="button">Ingresar</ion-button> 
+      <ion-button expand="full" routerLink="/register">Registrarse</ion-button>
+
+      <ion-item lines="none">
+        <ion-label>
+          <a (click)="recuperarContrasena()">¿Olvidaste tu contraseña?</a>
+        </ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

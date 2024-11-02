@@ -1,0 +1,16 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>recovery</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-content>
+      <form (submit)="recoveryEmail()">
+        <ion-input [(ngModel)]="email" type="email" name="email"></ion-input>
+        <ion-button type="submit">Enviar correo de recuperación</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

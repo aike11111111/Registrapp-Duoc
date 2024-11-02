@@ -1,0 +1,69 @@
+
+<div class="ion-page">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Detalle de Sección</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="ion-padding">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Alumnos en la Sección</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-item *ngFor="let alumno of alumnosConNombres">
+          <ion-label>
+            <!-- Muestra el nombre del alumno -->
+            {{ alumno.nombre }}
+          </ion-label>
+        </ion-item>
+
+        <!-- Mensaje si no hay alumnos -->
+        <ion-item *ngIf="alumnosConNombres.length === 0">
+          <ion-label>No hay alumnos registrados en esta sección.</ion-label>
+        </ion-item>
+
+        <!-- Mostrar ID del docente -->
+        <ion-item *ngIf="idDocente">
+          <ion-label>
+            <h2>ID Docente: {{ idDocente }}</h2>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+    
+    <!-- Botón de acción flotante para abrir el modal -->
+    <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+      <ion-fab-button (click)="abrirModal()">
+        <ion-icon name="qr-code"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+    <!-- Modal para el Código QR -->
+    <ion-modal #modal [canDismiss]="canDismiss" [presentingElement]="presentingElement">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Código QR</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="modal.dismiss()">Cerrar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <p>Tu código QR se genera a continuación:</p>
+          <!-- Mostrar el código QR automáticamente cuando se genere -->
+          <qrcode [qrdata]="texto" [width]="500" *ngIf="texto"></qrcode>
+          <ion-item *ngIf="!texto">
+            <ion-label>No se ha generado un código QR aún.</ion-label>
+          </ion-item>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  </ion-content>
+</div>
+
+
+

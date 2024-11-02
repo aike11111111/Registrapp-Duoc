@@ -1,0 +1,34 @@
+<ion-header [style.visibility]="content_visibility">
+  <ion-toolbar color="primary">
+    <ion-title>Escanear QR</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [style.visibility]="content_visibility">
+  <ion-button expand="block" class="ion-margin" (click)="startScan()">Scan QR Code</ion-button>
+
+  <div *ngIf="isLoading">
+    <p>{{ mensajeEstado }}</p>
+  </div>
+
+  <div *ngIf="mensajeError" style="color: red;">
+    <p>{{ mensajeError }}</p>
+  </div>
+
+  <div *ngIf="secciones.length > 0">
+    <h2>Sección Seleccionada</h2>
+    <ul>
+      <li *ngFor="let seccion of secciones">
+        <strong>Nombre Asignatura:</strong> {{ seccion.nombre_asignatura }}<br>
+        <strong>Sección:</strong> {{ seccion.nombre_seccion }}<br>
+        <strong>ID Sección:</strong> {{ seccion.id_seccion }}<br>
+        <strong>AID:</strong> {{ seccion.aid }}<br>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="!isLoading && !mensajeError && secciones.length === 0">
+    <p>No hay secciones disponibles.</p>
+  </div>
+</ion-content>
+
