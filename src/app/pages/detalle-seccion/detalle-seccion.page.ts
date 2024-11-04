@@ -72,50 +72,57 @@ export class DetalleSeccionPage implements OnInit {
   }
 
   async cerrarAsistenciaSeccion() {
-    // Verificar si textoInterno está vacío
+    console.log("Iniciando el cierre de asistencia...");
+    
+    // Verificación del código QR y separación
     if (!this.textoInterno) {
         this.mostrarAlerta('Error', 'El código QR no ha sido generado aún.', 'error');
-        return; // Salir del método si no hay código QR
+        return;
     }
+    const [aidqr, id_seccionqr] = this.textoInterno.split('-');
+    this.aidqr = aidqr;
+    this.id_seccionqr = id_seccionqr;
 
-    const textoInternoSeparado = this.textoInterno.split('-');
-    this.aidqr = textoInternoSeparado[0];
-    this.id_seccionqr = textoInternoSeparado[1];
-    console.log('profeeee', this.idDocente);
-
-    // Verificar si las secciones y aids coinciden
+    // Validación de coincidencia de secciones
     if (this.id_seccion === this.id_seccionqr && this.aid === this.aidqr) {
-        console.log('asistencia guardada con:', this.numeroDeAlumnos);
+        console.log("ID de sección y asignación coinciden, procediendo...");
 
-        // Contar presentes
-        const presentesCount = await this.asistenciaService.contarPresentes(this.aidqr, this.id_seccionqr);
-
-        // Obtener IDs de todos los alumnos en la sección
+        // Obtener IDs de alumnos por sección
         const idsAlumnos = await new Promise<string[]>((resolve, reject) => {
             this.alumnoSeccionService.getAlumnosByIdSeccion(this.id_seccionqr).subscribe(alumnosEncontrados => {
+                console.log("Alumnos encontrados:", alumnosEncontrados);
                 if (alumnosEncontrados.length > 0) {
-                    const idsAlumnosEncontrados = alumnosEncontrados.map(alumno => alumno.id_alumno);
-                    resolve(idsAlumnosEncontrados);
+                    resolve(alumnosEncontrados.map(alumno => alumno.id_alumno));
                 } else {
-                    console.warn('No se encontraron alumnos en esta sección.');
+                    console.warn("No se encontraron alumnos en esta sección.");
                     resolve([]);
                 }
             }, error => {
-                console.error('Error al obtener alumnos por sección: ', error);
+                console.error("Error al obtener alumnos por sección:", error);
                 reject(error);
             });
         });
 
-        // Determinar ausentes
-        const ausentesCount = idsAlumnos.length - presentesCount; // Calcula cuántos alumnos están ausentes
-        console.log(`Número de alumnos ausentes: ${ausentesCount}`);
+        // Conteo de presentes
+        const { count: presentesCount, ids: presentesIds } = await this.asistenciaService.contarPresentes(this.aidqr, this.id_seccionqr);
+        console.log("Presentes encontrados:", presentesCount, " IDs:", presentesIds);
+        
+        const ausentesIds = idsAlumnos.filter(id => !presentesIds.includes(id));
+        console.log("IDs de alumnos ausentes:", ausentesIds);
 
-        // Registrar la asistencia, incluyendo los presentes y ausentes
-        await this.asistenciaService.registrarAsistenciaSeccion(this.aidqr, this.id_seccionqr, this.idDocente, presentesCount, ausentesCount);
+        // Registro de presentes
+        await this.asistenciaService.registrarAsistenciaSeccion(this.aidqr, this.id_seccionqr, this.idDocente, presentesCount, idsAlumnos.length - presentesCount);
+
+        // Registro de ausentes
+        if (ausentesIds.length >= 0) {
+            console.log("Registrando ausentes...");
+            await this.asistenciaService.registrarAusentes(ausentesIds, this.aidqr, this.id_seccionqr);
+        }
     } else {
-        console.error('Error al registrar asistencia');
+        console.error("Error de coincidencia en ID de sección o asignatura.");
     }
 }
+
 
   mostrarAlerta(titulo: string, texto: string, icono: 'success' | 'error' | 'warning') {
     Swal.fire({

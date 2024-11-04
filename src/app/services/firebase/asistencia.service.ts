@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { format, toZonedTime } from 'date-fns-tz';
+import { SeccionesService } from 'src/app/services/firebase/secciones.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AsistenciaService {
 
-  constructor(private angularFirestore: AngularFirestore) {}
+  constructor(private angularFirestore: AngularFirestore, private seccionesService: SeccionesService) {}
 
   async registrarAsistencia(idAlumno: string, idSeccion: string, aid: string) {
     const now = new Date();
@@ -25,7 +26,7 @@ export class AsistenciaService {
         id_seccion: idSeccion,
         fecha: formattedFechaHora,
         asistencias: [
-            {id_alumno: idAlumno, estado: 'presente'} // Guardamos el estado del alumno por su ID
+            { id_alumno: idAlumno, estado: 'presente' } // Guardamos el estado del alumno por su ID
         ]
     };
 
@@ -38,47 +39,49 @@ export class AsistenciaService {
     }
 }
 
+async contarPresentes(aid: string, idSeccion: string): Promise<{ count: number; ids: string[] }> {
+    try {
+        console.log(`Iniciando conteo de presentes para aid: ${aid}, idSeccion: ${idSeccion}`);
+        
+        const snapshot = await this.angularFirestore.collection('asistencia_alumno', ref =>
+            ref.where('aid', '==', aid)
+               .where('id_seccion', '==', idSeccion)
+        ).get().toPromise();
 
-async contarPresentes(aid: string, idSeccion: string): Promise<number> {
-  try {
-    console.log(`Iniciando conteo de presentes para aid: ${aid}, idSeccion: ${idSeccion}`);
-    
-    // Obtener los documentos de Firestore
-    const snapshot = await this.angularFirestore.collection('asistencia_alumno', ref =>
-      ref.where('aid', '==', aid)
-         .where('id_seccion', '==', idSeccion)
-    ).get().toPromise();
+        if (!snapshot) {
+            console.warn('No se encontró ningún documento. Devolviendo 0.');
+            return { count: 0, ids: [] };
+        }
 
-    // Validar que snapshot no sea undefined
-    if (!snapshot) {
-      console.warn('No se encontró ningún documento. Devolviendo 0.');
-      return 0;
+        let count = 0;
+        const presentesIds: string[] = [];
+        snapshot.forEach(doc => {
+            const data = doc.data() as any;
+
+            if (Array.isArray(data.asistencias)) {
+                const presentes = data.asistencias.filter((asistencia: { id_alumno: string; estado: string }) => asistencia.estado === 'presente');
+                count += presentes.length;
+                presentes.forEach((asistencia: { id_alumno: string }) => {
+                    presentesIds.push(asistencia.id_alumno);
+                });
+            }
+        });
+
+        console.log(`Número de alumnos con estado 'presente': ${count}`);
+        return { count, ids: presentesIds };
+    } catch (error) {
+        console.error('Error al contar los presentes:', error);
+        return { count: 0, ids: [] };
     }
-
-    let count = 0;
-    snapshot.forEach(doc => {
-      const data = doc.data() as any; // Definimos 'data' con tipo 'any' para evitar errores de tipo
-
-      // Verificamos que 'asistencias' sea un array antes de filtrar
-      if (Array.isArray(data.asistencias)) {
-        const presentes = data.asistencias.filter((asistencia: any) => asistencia.estado === 'presente');
-        count += presentes.length;
-      }
-    });
-
-    console.log(`Número de alumnos con estado 'presente': ${count}`);
-    return count;
-  } catch (error) {
-    console.error('Error al contar los presentes:', error);
-    return 0;
-  }
 }
+
 
 // Método para registrar asistencia en una sección específica
 async registrarAsistenciaSeccion(aid: string, idSeccion: string, idDocente: string, cantPresentes: number, cantAusentes: number) {
-    const now = new Date();
-    const zonaHorariaChile = 'America/Santiago';
-    const formattedFechaHora = format(now, 'yyyy-MM-dd HH:mm:ss', { timeZone: zonaHorariaChile });
+  const now = new Date();
+  const zonaHorariaChile = 'America/Santiago';
+  const fechaHoraLocal = toZonedTime(now, zonaHorariaChile);
+  const formattedFechaHora = format(fechaHoraLocal, 'yyyy-MM-dd HH:mm:ss');
 
     try {
         // Llamamos a la función contarPresentes para obtener el número de alumnos presentes
@@ -100,5 +103,46 @@ async registrarAsistenciaSeccion(aid: string, idSeccion: string, idDocente: stri
     } catch (error) {
         console.error('Error al registrar asistencia de la sección:', error);
     }
+}
+
+async registrarAusentes(idsAlumnos: string[], aid: string, idSeccion: string) {
+  // Obtener el horario de la sección usando el servicio
+  // Consultar Firestore para documentos específicos de fecha, id y sección
+  const snapshot = await this.angularFirestore.collection('asistencia_alumno', ref =>
+      ref.where('aid', '==', aid)
+         .where('id_seccion', '==', idSeccion)
+  ).get().toPromise();
+
+  if (!snapshot || snapshot.empty) {
+      console.error('No se encontró el documento para actualizar.');
+      return; // Salir si no se encuentra el documento
+  }
+
+  // Preparar las nuevas ausencias
+  const nuevasAusencias = idsAlumnos.map(idAlumno => ({
+      id_alumno: idAlumno,
+      estado: 'ausente'
+  }));
+
+  // Recorrer los documentos encontrados para actualizar sus ausencias
+  const promises = snapshot.docs.map(async doc => {
+      const data = doc.data() as any;
+      const existingAsistencias = Array.isArray(data.asistencias) ? data.asistencias : [];
+
+      // Combinar las asistencias existentes con las nuevas ausencias
+      const updatedAsistencias = [...existingAsistencias, ...nuevasAusencias];
+
+      // Actualizar el documento con el conjunto combinado
+      return this.angularFirestore.doc(`asistencia_alumno/${doc.id}`).update({
+          asistencias: updatedAsistencias
+      });
+  });
+
+  try {
+      await Promise.all(promises);
+      console.log('Ausencias registradas con éxito');
+  } catch (error) {
+      console.error('Error al registrar ausencias:', error);
+  }
 }
 }
