@@ -9,6 +9,7 @@
     <ion-item *ngFor="let seccion of secciones" (click)="detalleSeccion(seccion)">
       <ion-label>
         <h2>{{ seccion.nombre_seccion }}</h2>
+        <h2>{{ seccion.horario }}</h2>
       </ion-label>
     </ion-item>
   </ion-list>

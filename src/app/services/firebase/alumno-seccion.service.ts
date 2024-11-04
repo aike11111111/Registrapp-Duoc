@@ -30,4 +30,5 @@ export class AlumnoSeccionService {
       map((alumnos_seccion: AlumnoSeccion[]) => alumnos_seccion.filter(alumno => alumno.id_alumno === id_alumno))
     );
   }
+
 }

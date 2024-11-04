@@ -55,7 +55,7 @@ export class SeccionesPage implements OnInit {
   detalleSeccion(seccion: Seccion) {
     if (this.tipoUsuario === 'docente') {
       // Redirigir a la página detalle-seccion si es docente
-      this.router.navigate(['/detalle-seccion', seccion.id_seccion, seccion.aid, seccion.nombre_seccion], {
+      this.router.navigate(['/detalle-seccion', seccion.id_seccion, seccion.aid, seccion.nombre_seccion, seccion.horario], {
       });
     } else if (this.tipoUsuario === 'alumno') {
       // Redirigir a la página escanearqr si es alumno

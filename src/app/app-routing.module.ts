@@ -36,7 +36,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/asistencia/asistencia.module').then( m => m.AsistenciaPageModule)
   },
   {
-    path: 'detalle-seccion/:id_seccion/:aid/:nombre_seccion',
+    path: 'detalle-seccion/:id_seccion/:aid/:nombre_seccion/:horario',
     loadChildren: () => import('./pages/detalle-seccion/detalle-seccion.module').then( m => m.DetalleSeccionPageModule)
   },
   {
@@ -80,7 +80,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/admin/crear-seccion/crear-seccion.module').then( m => m.CrearSeccionPageModule)
   },
   {
-    path: 'escanearqr/:id_seccion',
+    path: 'escanearqr/:id_seccion/:aid',
     loadChildren: () => import('./pages/escanearqr/escanearqr.module').then( m => m.EscanearqrPageModule)
   },
   
