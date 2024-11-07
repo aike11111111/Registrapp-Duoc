@@ -6,17 +6,62 @@
       </ion-button>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title></ion-title>
+    <ion-title>Administración</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-list>
-    <ion-item *ngFor="let aux of usuarios" [routerLink]="['/usuarios', aux.uid]">
-      <ion-label>
-        <p>Tipo Usuario: {{ aux.tipo }}</p>
-        <h2>{{ aux.email }}</h2>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+<ion-content>
+  <div class="container-bienv">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Hola,</ion-card-title>
+      </ion-card-header>
+    
+      <ion-card-content>
+        Bienvenido al sistema, aquí puedes añadir, editar y borrar en cada módulo.
+      </ion-card-content>
+    </ion-card>
+  </div>
+  
+  <ion-grid>
+    <ion-row class="no-margin">
+      <ion-col size="6">
+        <ion-card class="admin-card" routerLink="/gestionar-asignaturas">
+          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+          <ion-card-header>
+            <ion-card-title>Asignaturas</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+  
+      <ion-col size="6">
+        <ion-card class="admin-card" routerLink="/gestionar-secciones">
+          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+          <ion-card-header>
+            <ion-card-title>Secciones</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  
+    <ion-row class="no-margin">
+      <ion-col size="6">
+        <ion-card class="admin-card" routerLink="/gestionar-usuarios">
+          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+          <ion-card-header>
+            <ion-card-title>Usuarios</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+  
+      <ion-col size="6">
+        <ion-card class="admin-card">
+          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+          <ion-card-header>
+            <ion-card-title>Opción Adicional</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>  
 </ion-content>

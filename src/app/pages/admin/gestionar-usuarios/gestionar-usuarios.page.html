@@ -1,0 +1,16 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>gestionar-usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-item *ngFor="let aux of usuarios" [routerLink]="['/usuarios', aux.uid]">
+      <ion-label>
+        <p>Tipo Usuario: {{ aux.tipo }}</p>
+        <h2>{{ aux.email }}</h2>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

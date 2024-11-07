@@ -37,6 +37,7 @@ export class DetalleSeccionPage implements OnInit {
   nombreAsignatura: string | null = null;
   qrGenerado: boolean = false;
   numeroDeAlumnos: number = 0;
+  asistenciaCerrada: boolean = false; 
 
   @ViewChild('modal', { static: false }) modal: any;
 
@@ -73,12 +74,19 @@ export class DetalleSeccionPage implements OnInit {
 
   async cerrarAsistenciaSeccion() {
     console.log("Iniciando el cierre de asistencia...");
+
+    // Verificar si la asistencia ya ha sido cerrada
+    if (this.asistenciaCerrada) {
+        this.mostrarAlerta('Error', 'La asistencia ya ha sido cerrada.', 'error');
+        return;
+    }
     
     // Verificación del código QR y separación
     if (!this.textoInterno) {
         this.mostrarAlerta('Error', 'El código QR no ha sido generado aún.', 'error');
         return;
     }
+
     const [aidqr, id_seccionqr] = this.textoInterno.split('-');
     this.aidqr = aidqr;
     this.id_seccionqr = id_seccionqr;
@@ -87,42 +95,51 @@ export class DetalleSeccionPage implements OnInit {
     if (this.id_seccion === this.id_seccionqr && this.aid === this.aidqr) {
         console.log("ID de sección y asignación coinciden, procediendo...");
 
-        // Obtener IDs de alumnos por sección
-        const idsAlumnos = await new Promise<string[]>((resolve, reject) => {
-            this.alumnoSeccionService.getAlumnosByIdSeccion(this.id_seccionqr).subscribe(alumnosEncontrados => {
-                console.log("Alumnos encontrados:", alumnosEncontrados);
-                if (alumnosEncontrados.length > 0) {
-                    resolve(alumnosEncontrados.map(alumno => alumno.id_alumno));
-                } else {
-                    console.warn("No se encontraron alumnos en esta sección.");
-                    resolve([]);
-                }
-            }, error => {
-                console.error("Error al obtener alumnos por sección:", error);
-                reject(error);
+        try {
+            // Obtener IDs de alumnos por sección
+            const idsAlumnos = await new Promise<string[]>((resolve, reject) => {
+                this.alumnoSeccionService.getAlumnosByIdSeccion(this.id_seccionqr).subscribe(alumnosEncontrados => {
+                    console.log("Alumnos encontrados:", alumnosEncontrados);
+                    if (alumnosEncontrados.length > 0) {
+                        resolve(alumnosEncontrados.map(alumno => alumno.id_alumno));
+                    } else {
+                        console.warn("No se encontraron alumnos en esta sección.");
+                        resolve([]);
+                    }
+                }, error => {
+                    console.error("Error al obtener alumnos por sección:", error);
+                    reject(error);
+                });
             });
-        });
 
-        // Conteo de presentes
-        const { count: presentesCount, ids: presentesIds } = await this.asistenciaService.contarPresentes(this.aidqr, this.id_seccionqr);
-        console.log("Presentes encontrados:", presentesCount, " IDs:", presentesIds);
-        
-        const ausentesIds = idsAlumnos.filter(id => !presentesIds.includes(id));
-        console.log("IDs de alumnos ausentes:", ausentesIds);
+            // Conteo de presentes
+            const { count: presentesCount, ids: presentesIds } = await this.asistenciaService.contarPresentes(this.aidqr, this.id_seccionqr);
+            console.log("Presentes encontrados:", presentesCount, " IDs:", presentesIds);
+            
+            const ausentesIds = idsAlumnos.filter(id => !presentesIds.includes(id));
+            console.log("IDs de alumnos ausentes:", ausentesIds);
 
-        // Registro de presentes
-        await this.asistenciaService.registrarAsistenciaSeccion(this.aidqr, this.id_seccionqr, this.idDocente, presentesCount, idsAlumnos.length - presentesCount);
+            // Registro de presentes
+            await this.asistenciaService.registrarAsistenciaSeccion(this.aidqr, this.id_seccionqr, this.idDocente, presentesCount, idsAlumnos.length - presentesCount);
 
-        // Registro de ausentes
-        if (ausentesIds.length >= 0) {
-            console.log("Registrando ausentes...");
-            await this.asistenciaService.registrarAusentes(ausentesIds, this.aidqr, this.id_seccionqr);
+            // Registro de ausentes
+            if (ausentesIds.length > 0) { // Cambiar >= 0 a > 0 para evitar registros vacíos
+                console.log("Registrando ausentes...");
+                await this.asistenciaService.registrarAusentes(ausentesIds, this.aidqr, this.id_seccionqr);
+            }
+
+            // Actualizar la bandera de estado de asistencia cerrada
+            this.asistenciaCerrada = true; // Marcar como cerrada
+            console.log("Asistencia cerrada con éxito.");
+        } catch (error) {
+            console.error("Error al cerrar la asistencia:", error);
+            this.mostrarAlerta('Error', 'No se pudo cerrar la asistencia. Intenta nuevamente.', 'error');
         }
     } else {
         console.error("Error de coincidencia en ID de sección o asignatura.");
+        this.mostrarAlerta('Error', 'Los IDs de sección o asignatura no coinciden.', 'error');
     }
 }
-
 
   mostrarAlerta(titulo: string, texto: string, icono: 'success' | 'error' | 'warning') {
     Swal.fire({
@@ -216,12 +233,20 @@ export class DetalleSeccionPage implements OnInit {
   }
 
   generarQR(nombre_seccion: string): boolean {
+    if (this.asistenciaCerrada) {
+        this.texto = 'La asistencia ya ha sido cerrada. No se puede generar el código QR.';
+        this.qrGenerado = false; // No se generó el QR
+        // Aquí puedes usar un servicio de alerta para mostrar el mensaje
+        alert(this.texto); // Ejemplo simple de alerta
+        return false;
+    }
+
     if (!this.nombreAsignatura || !nombre_seccion) {
-        this.texto = 'Información no disponible'; 
+        this.texto = 'Información no disponible';
         this.qrGenerado = false; // Asegúrate de establecer en false si no se genera
         return false;
     } else {
-        console.log('horario', this.horario); 
+        console.log('horario', this.horario);
 
         const diasHorarios = this.horario.split(',').map(diaHorario => {
             const [dia, rangoHorario] = diaHorario.trim().split(' ');
@@ -274,8 +299,8 @@ export class DetalleSeccionPage implements OnInit {
 
         if (horarioActivo) {
             // Solo genera el código QR si hay horario activo
-            this.textoInterno = `${this.aid}-${this.id_seccion}`; 
-            this.texto = `${this.nombreAsignatura}-${nombre_seccion}`; 
+            this.textoInterno = `${this.aid}-${this.id_seccion}`;
+            this.texto = `${this.nombreAsignatura}-${nombre_seccion}`;
             this.qrGenerado = true; // Se generó el QR
             console.log(this.texto);
             return true;

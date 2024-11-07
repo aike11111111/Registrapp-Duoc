@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router'; // Importa Router para la redirección
+import { map } from 'rxjs';
 import { Seccion } from 'src/app/interfaces/seccion';
 import { AsignaturasService } from 'src/app/services/firebase/asignaturas.service'; // Asegúrate de que la ruta sea correcta
+import { SeccionesService } from 'src/app/services/firebase/secciones.service';
 
 @Component({
   selector: 'app-secciones',
@@ -17,7 +19,8 @@ export class SeccionesPage implements OnInit {
   constructor(
     private route: ActivatedRoute, 
     private router: Router, // Inyecta el Router para la redirección
-    private asignaturaService: AsignaturasService
+    private asignaturaService: AsignaturasService,
+    private seccionService: SeccionesService
   ) {}
 
   ngOnInit() {

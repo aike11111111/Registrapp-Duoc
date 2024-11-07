@@ -1,0 +1,32 @@
+.admin-card {
+  border-radius: 15px; /* Bordes redondeados */
+  transition: transform 0.2s ease-in-out; /* Transición para el efecto */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+  cursor: pointer;
+}
+
+.admin-card:hover {
+  transform: scale(1.05); /* Efecto de escala al pasar el ratón */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Mayor sombra en hover */
+}
+
+ion-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 220px; /* Ajusta el tamaño de la tarjeta */
+  width: 400px;
+  text-align: center;
+}
+
+img {
+  width: 100%; /* Hace que la imagen ocupe todo el ancho de la tarjeta */
+  height: 160px; /* Mantiene la proporción de la imagen */
+  object-fit: cover; /* Asegura que la imagen cubra completamente el espacio sin distorsionarse */
+  border-radius: 8px; /* Opcional: añade bordes redondeados */
+}
+
+.container-bienv{
+  width: 100%;
+}

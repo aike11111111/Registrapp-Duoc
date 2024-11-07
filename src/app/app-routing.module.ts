@@ -62,11 +62,11 @@ const routes: Routes = [
         path: '',
         loadChildren: () => import('./pages/admin/dashboard/dashboard.module').then( m => m.DashboardPageModule)
       },
-      {
-        path: ':email',
-        loadChildren: () => import('./pages/admin/detalle-usuario/detalle-usuario.module').then( m => m.DetalleUsuarioPageModule)
-      }
     ]
+  },
+  {
+    path: 'detalle-usuario/:email',
+    loadChildren: () => import('./pages/admin/detalle-usuario/detalle-usuario.module').then( m => m.DetalleUsuarioPageModule)
   },
   {
     path: 'dashboard',
@@ -82,6 +82,14 @@ const routes: Routes = [
   {
     path: 'escanearqr/:id_seccion/:aid',
     loadChildren: () => import('./pages/escanearqr/escanearqr.module').then( m => m.EscanearqrPageModule)
+  },
+  {
+    path: 'gestionar-secciones',
+    loadChildren: () => import('./pages/admin/gestionar-secciones/gestionar-secciones.module').then( m => m.GestionarSeccionesPageModule)
+  },
+  {
+    path: 'gestionar-usuarios',
+    loadChildren: () => import('./pages/admin/gestionar-usuarios/gestionar-usuarios.module').then( m => m.GestionarUsuariosPageModule)
   },
   
  

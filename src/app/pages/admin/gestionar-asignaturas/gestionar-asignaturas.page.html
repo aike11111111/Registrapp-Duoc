@@ -1,23 +1,48 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Gestionar Asignaturas</ion-title>
+    <ion-title>Panel de Administración</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out"></ion-icon>
+      </ion-button>
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="agregarAsignaturaForm" (ngSubmit)="guardarAsignatura()">
-    <ion-item>
-      <ion-label position="floating">Nombre de la Asignatura</ion-label>
-      <ion-input formControlName="nombre"></ion-input>
-    </ion-item>
-    
-    <ion-item>
-      <ion-label position="floating">Descripción</ion-label>
-      <ion-input formControlName="descripcion"></ion-input>
-    </ion-item>
+  <!-- Administración de Asignaturas -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Administrar Asignaturas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Formulario de Añadir Asignatura -->
+      <form [formGroup]="agregarAsignaturaForm" (ngSubmit)="guardarAsignatura()">
+        <ion-item>
+          <ion-label position="floating">Nombre de la Asignatura</ion-label>
+          <ion-input formControlName="nombre_asignatura" type="text"></ion-input>
+        </ion-item>
 
-    <ion-button expand="full" type="submit" [disabled]="agregarAsignaturaForm.invalid">
-      Guardar Asignatura
-    </ion-button>
-  </form>
+        <ion-item>
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-input formControlName="descripcion" type="text"></ion-input>
+        </ion-item>
+
+        <ion-button expand="full" type="submit" [disabled]="agregarAsignaturaForm.invalid">Guardar Asignatura</ion-button>
+      </form>
+
+      <!-- Lista de Asignaturas -->
+      <ion-list>
+        <ion-item *ngFor="let asignatura of asignaturas">
+          <ion-label>
+            <h2>{{ asignatura.nombre_asignatura }}</h2>
+            <p>{{ asignatura.descripcion }}</p>
+          </ion-label>
+          <ion-button fill="clear" (click)="openEditAsignatura()">Editar</ion-button>
+          <ion-button fill="clear" color="danger" (click)="deleteAsignatura(asignatura.aid)">Eliminar</ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

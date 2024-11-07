@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Gestionar Secciones</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="abrirModal()">
+        <ion-icon name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item *ngFor="let seccion of secciones">
+      <ion-label>
+        Asignatura: {{ seccion.nombre_asignatura }}
+        <br>
+        Sección: {{ seccion.nombre_seccion }}
+        <br>
+        Horario: {{ seccion.horario }}
+        <br>
+        Sala: {{ seccion.sala }}
+      </ion-label>
+
+      <!-- Contenedor de botones en el lado derecho -->
+      <ion-buttons slot="end">
+        <!-- Botón de Editar con el icono de lápiz -->
+        <ion-button (click)="abrirModalEditar(seccion.id_seccion)">
+          <ion-icon name="pencil"></ion-icon>
+        </ion-button>
+        
+        <!-- Botón de Eliminar con el icono de basura -->
+        <ion-button (click)="eliminarSeccion(seccion.id_seccion)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+</ion-content>
