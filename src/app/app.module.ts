@@ -10,7 +10,6 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from 'src/environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Asegúrate de que FormsModule esté importado
 import { HttpClientModule } from '@angular/common/http';
-import { GestionarModalComponent } from './pages/modales/gestionar-modal/gestionar-modal.component';
 
 @NgModule({
   declarations: [AppComponent],

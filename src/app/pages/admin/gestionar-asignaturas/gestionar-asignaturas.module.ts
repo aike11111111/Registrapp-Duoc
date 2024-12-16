@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { GestionarAsignaturasPageRoutingModule } from './gestionar-asignaturas-routing.module';
 
 import { GestionarAsignaturasPage } from './gestionar-asignaturas.page';
+import { ModalAsignaturasComponent } from '../../modales/modal-asignaturas/modal-asignaturas.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { GestionarAsignaturasPage } from './gestionar-asignaturas.page';
     GestionarAsignaturasPageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [GestionarAsignaturasPage]
+  declarations: [GestionarAsignaturasPage, ModalAsignaturasComponent],
+  exports: [ModalAsignaturasComponent]
 })
 export class GestionarAsignaturasPageModule {}

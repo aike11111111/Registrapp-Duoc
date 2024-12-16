@@ -1,16 +1,37 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>gestionar-usuarios</ion-title>
+    <ion-title>Gestionar Usuarios</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="abrirModal()">
+        <ion-icon name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content class="ion-padding">
   <ion-list>
-    <ion-item *ngFor="let aux of usuarios" [routerLink]="['/usuarios', aux.uid]">
+    <ion-item *ngFor="let usuario of usuarios">
       <ion-label>
-        <p>Tipo Usuario: {{ aux.tipo }}</p>
-        <h2>{{ aux.email }}</h2>
+        <h2>Nombre: {{ usuario.nombre }}</h2>
+        <p>Email: {{ usuario.email }}</p>
+        <p>Tipo: {{ usuario.tipo }}</p>
       </ion-label>
+
+      <ion-buttons slot="end">
+        <!-- Botón Editar -->
+        <ion-button (click)="abrirModalEditar(usuario)">
+          <ion-icon name="pencil"></ion-icon>
+        </ion-button>
+
+        <!-- Botón Eliminar -->
+        <ion-button (click)="eliminarUsuario(usuario.uid, usuario.tipo)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-item>
   </ion-list>
+
+  <!-- Mensaje cuando no hay usuarios -->
+  <p *ngIf="usuarios.length === 0" class="ion-text-center">No hay usuarios registrados.</p>
 </ion-content>

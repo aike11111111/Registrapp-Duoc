@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ uid ? 'Editar Usuario' : 'Agregar Usuario' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
+    <!-- Campo Nombre -->
+    <ion-item>
+      <ion-input label="Nombre" type="text" formControlName="nombre" labelPlacement="floating" placeholder="Ingrese nombre"></ion-input>
+    </ion-item>
+
+    <!-- Campo Email -->
+    <ion-item>
+      <ion-input label="Email" type="email" formControlName="email" labelPlacement="floating" placeholder="Ingrese email"></ion-input>
+    </ion-item>
+
+    <!-- Campo Contraseña -->
+    <ion-item>
+      <ion-input label="Contraseña" type="password" formControlName="pass" labelPlacement="floating" placeholder="Ingrese contraseña"></ion-input>
+      <ion-button fill="outline" slot="end" (click)="generarPassAleatoria()">
+        Generar
+      </ion-button>
+    </ion-item>
+
+    <!-- Campo Tipo -->
+    <ion-item>
+      <ion-select label="Tipo" label-placement="floating" formControlName="tipo" placeholder="Seleccione un tipo">
+        <ion-select-option value="alumno">Alumno</ion-select-option>
+        <ion-select-option value="docente">Docente</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Botón Guardar -->
+    <ion-button color="dark" type="submit" expand="block">
+      {{ uid ? 'Guardar Cambios' : 'Agregar Usuario' }}
+    </ion-button>
+  </form>
+</ion-content>

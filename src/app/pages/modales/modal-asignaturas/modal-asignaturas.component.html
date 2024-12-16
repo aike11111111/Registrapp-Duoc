@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ aid ? 'Editar Asignatura' : 'Agregar Asignatura' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="agregarAsignaturaForm" (ngSubmit)="aid ? editarAsignatura(aid) : guardarAsignatura()">
+    <ion-item>
+      <ion-input label="Nombre de Asignatura" type="text" formControlName="nombre_asignatura" labelPlacement="floating" placeholder="Ingrese nombre"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Descripción" type="text" formControlName="descripcion" labelPlacement="floating" placeholder="Ingrese descripción"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select label="Docente" label-placement="floating" formControlName="id_docente" placeholder="Seleccione un docente">
+        <ion-select-option *ngFor="let docente of docentes" [value]="docente.id_docente">
+          {{ docente.nombre }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-button color="dark" type="submit">
+      {{ aid ? 'Actualizar Asignatura' : 'Guardar Asignatura' }}
+    </ion-button>
+  </form>
+</ion-content>

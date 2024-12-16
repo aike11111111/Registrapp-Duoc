@@ -13,23 +13,17 @@
   <ion-list>
     <ion-item *ngFor="let seccion of secciones">
       <ion-label>
-        Asignatura: {{ seccion.nombre_asignatura }}
-        <br>
-        Sección: {{ seccion.nombre_seccion }}
-        <br>
-        Horario: {{ seccion.horario }}
-        <br>
-        Sala: {{ seccion.sala }}
+        <h2>Asignatura: {{ seccion.nombre_asignatura }}</h2>
+        <p>Sección: {{ seccion.nombre_seccion }}</p>
+        <p>Horario: {{ seccion.horario }}</p>
+        <p>Sala: {{ seccion.sala }}</p>
       </ion-label>
 
-      <!-- Contenedor de botones en el lado derecho -->
       <ion-buttons slot="end">
-        <!-- Botón de Editar con el icono de lápiz -->
         <ion-button (click)="abrirModalEditar(seccion.id_seccion)">
           <ion-icon name="pencil"></ion-icon>
         </ion-button>
         
-        <!-- Botón de Eliminar con el icono de basura -->
         <ion-button (click)="eliminarSeccion(seccion.id_seccion)">
           <ion-icon name="trash"></ion-icon>
         </ion-button>

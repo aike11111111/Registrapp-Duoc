@@ -22,5 +22,19 @@ export class AsignaturaDocenteService {
       ref.where('id_docente', '==', idDocente) 
     ).valueChanges();
   }
+
+  eliminarAsignaturasDocente(idDocente: string): Promise<void> {
+    const asignaturas = this.firestore.collection('asignaturas_docente', ref => ref.where('id_docente', '==', idDocente)).get();
+
+    // Eliminar todas las asignaturas del docente
+    asignaturas.forEach((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    });
+
+    return Promise.resolve();
+  }
 }
+
 

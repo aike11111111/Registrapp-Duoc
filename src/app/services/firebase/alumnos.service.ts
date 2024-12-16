@@ -12,12 +12,37 @@ export class AlumnosService {
 
   alumnos: Alumno[] = [];
 
-  constructor(private firestore: AngularFirestore) { }
+  constructor(private angularFirestore: AngularFirestore) { }
 
   getAlumnos(): Observable<Alumno[]> {
-    return this.firestore.collection<Alumno>('alumnos').valueChanges();
+    return this.angularFirestore.collection<Alumno>('alumnos').valueChanges();
   }
+
+  getNombresDeAlumnos(): Observable<{ id_alumno: string; nombre: string }[]> {
+    const alumnos$ = this.angularFirestore.collection('alumnos').valueChanges();
+    const usuarios$ = this.angularFirestore.collection('usuarios').valueChanges();
   
+    return combineLatest([alumnos$, usuarios$]).pipe(
+      map(([alumnos, usuarios]: [any[], any[]]) => {
+        return alumnos.map(alumno => {
+          const usuario = usuarios.find(user => user.uid === alumno.uid); // Comparar UID
+          return {
+            id_alumno: alumno.id_alumno, // ID del alumno
+            nombre: usuario?.nombre || 'Nombre no encontrado' // Nombre del usuario o valor por defecto
+          };
+        });
+      })
+    );
+  }  
+
+  obtenerIdAlumnoPorUid(uid: string): Observable<any[]> {
+    return this.angularFirestore.collection('usuarios', ref => ref.where('uid', '==', uid)).valueChanges();
+  }
+
+  getIdAlumnoPorUid(uid: string): Observable<any[]> {
+    return this.angularFirestore.collection('alumnos', ref => ref.where('uid', '==', uid)).valueChanges();
+  }
+
   cargarAlumno(uidUsuario: string): Observable<Alumno> {
     return this.getAlumnos().pipe(
       map(alumnos => {
@@ -30,7 +55,7 @@ export class AlumnosService {
 
   //alumnos_seccion
   getSeccionesIdsPorAlumno(idAlumno: string): Observable<string[]> {
-    return this.firestore.collection<AlumnoSeccion>('alumnos_seccion', ref => ref.where('id_alumno', '==', idAlumno)).snapshotChanges().pipe(
+    return this.angularFirestore.collection<AlumnoSeccion>('alumnos_seccion', ref => ref.where('id_alumno', '==', idAlumno)).snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           const data = a.payload.doc.data() as AlumnoSeccion;
@@ -41,7 +66,7 @@ export class AlumnosService {
   }
 
   getAlumnosPorIDs(ids: string[]): Observable<any[]> {
-    return this.firestore.collection('alumnos', ref => ref.where('id_alumno', 'in', ids)).snapshotChanges();
+    return this.angularFirestore.collection('alumnos', ref => ref.where('id_alumno', 'in', ids)).snapshotChanges();
   }
 
   getAlumnoByUid(uid: string) {
@@ -51,14 +76,14 @@ export class AlumnosService {
   }
 
   getAlumnosPorIds(idsAlumnos: string[]): Observable<Alumno[]> {
-    return this.firestore.collection<Alumno>('alumnos', ref =>
+    return this.angularFirestore.collection<Alumno>('alumnos', ref =>
       ref.where('id_alumno', 'in', idsAlumnos)
     ).valueChanges();
   }  
 
   verificarInscripcion(idAlumno: string, idSeccion: string): Observable<boolean> {
     return new Observable<boolean>((observer) => {
-      this.firestore.collection('alumnos_seccion', ref => 
+      this.angularFirestore.collection('alumnos_seccion', ref => 
         ref.where('id_alumno', '==', idAlumno)
            .where('id_seccion', '==', idSeccion)
       ).get().subscribe(snapshot => {
@@ -73,17 +98,17 @@ export class AlumnosService {
 
   // Método auxiliar para obtener detalles de los alumnos
   obtenerDetallesAlumnos(idsAlumnos: string[]): Observable<Alumno[]> {
-    return this.firestore.collection<Alumno>('alumnos', ref => 
+    return this.angularFirestore.collection<Alumno>('alumnos', ref => 
       ref.where('id_alumno', 'in', idsAlumnos)).valueChanges();
   }
 
   getAlumnosPorSeccion(idSeccion: string): Observable<Alumno[]> {
-    return this.firestore.collection<AlumnoSeccion>('alumnos_seccion', ref =>
+    return this.angularFirestore.collection<AlumnoSeccion>('alumnos_seccion', ref =>
       ref.where('id_seccion', '==', idSeccion)
     ).valueChanges().pipe(
       switchMap(alumnosSeccion => {
         const alumnosIds = alumnosSeccion.map(alumno => alumno.id_alumno); // Suponiendo que id_alumno está en AlumnoSeccion
-        return this.firestore.collection<Alumno>('alumnos', ref =>
+        return this.angularFirestore.collection<Alumno>('alumnos', ref =>
           ref.where('id_alumno', 'in', alumnosIds) // Cambia 'id_alumno' al nombre de campo correspondiente
         ).valueChanges().pipe(
           map(alumnos => alumnos.map(alumno => ({
@@ -99,7 +124,7 @@ export class AlumnosService {
 
   getSeccionesPorIds(idsSecciones: string[]): Observable<any[]> {
     return new Observable<any[]>((observer) => {
-      this.firestore.collection('secciones', ref => 
+      this.angularFirestore.collection('secciones', ref => 
         ref.where('id_seccion', 'in', idsSecciones)
       ).get().subscribe(snapshot => {
         const secciones = snapshot.docs.map(doc => {
@@ -112,6 +137,41 @@ export class AlumnosService {
         console.error('Error obteniendo secciones:', error);
         observer.error(error);
       });
+    });
+  }
+
+  asignarAlumnoAAAsignatura(idAlumno: string, aid: string) {
+    const sidAlumno = this.angularFirestore.createId(); // Usando createId() para generar un ID único
+  
+    const alumnoAsignaturaData = {
+      id_alumno: idAlumno,
+      aid: aid,
+      sid_alumno: sidAlumno,  // Asigna el ID generado
+    };
+  
+    this.angularFirestore.collection('alumnos_asignatura').doc(sidAlumno).set(alumnoAsignaturaData)
+      .then(() => {
+        console.log('Alumno asignado correctamente a la asignatura');
+  
+        // Aquí puedes hacer lo que necesites después de asignar el alumno, como actualizar la lista de alumnos
+        // Si es necesario, puedes filtrar y cargar nuevamente los alumnos por asignatura.
+      })
+      .catch(error => {
+        console.error('Error al asignar alumno a asignatura:', error);
+      });
+  }
+  
+  eliminarAlumnoPorUid(uid: string): Promise<void> {
+    return this.angularFirestore.collection('alumnos', ref => ref.where('uid', '==', uid)).get().toPromise().then(querySnapshot => {
+      if (querySnapshot && !querySnapshot.empty) {
+        querySnapshot.forEach(doc => {
+          doc.ref.delete(); // Elimina el documento encontrado
+        });
+      } else {
+        console.log('No se encontró ningún documento para eliminar.');
+      }
+    }).catch(error => {
+      console.error('Error al eliminar el documento del docente:', error);
     });
   }
 }

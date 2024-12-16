@@ -1,6 +1,6 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>recovery</ion-title>
+    <ion-title>Recupera tu Contraseña</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -8,9 +8,10 @@
   <ion-card>
     <ion-card-content>
       <form (submit)="recoveryEmail()">
-        <ion-input [(ngModel)]="email" type="email" name="email"></ion-input>
-        <ion-button type="submit">Enviar correo de recuperación</ion-button>
+        <ion-input [(ngModel)]="email" type="email" name="email" label="Correo:" labelPlacement="floating" placeholder="Ingresa tu email"></ion-input>
+        <ion-button type="submit" color="dark">Enviar correo de recuperación</ion-button>
       </form>
     </ion-card-content>
   </ion-card>
 </ion-content>
+

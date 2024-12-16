@@ -89,5 +89,8 @@ export class LoginPage implements OnInit {
       this.passValue = '';
     }
   }
-  recuperarContrasena() {}
+  
+  recovery() {
+    this.router.navigate(['/recovery']);
+  }
 }

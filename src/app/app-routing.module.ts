@@ -67,11 +67,8 @@ const routes: Routes = [
   {
     path: 'detalle-usuario/:email',
     loadChildren: () => import('./pages/admin/detalle-usuario/detalle-usuario.module').then( m => m.DetalleUsuarioPageModule)
-  },
+  },   
   {
-    path: 'dashboard',
-    loadChildren: () => import('./pages/usuario/dashboard/dashboard.module').then( m => m.DashboardPageModule)
-  },   {
     path: 'gestionar-asignaturas',
     loadChildren: () => import('./pages/admin/gestionar-asignaturas/gestionar-asignaturas.module').then( m => m.GestionarAsignaturasPageModule)
   },
@@ -90,6 +87,10 @@ const routes: Routes = [
   {
     path: 'gestionar-usuarios',
     loadChildren: () => import('./pages/admin/gestionar-usuarios/gestionar-usuarios.module').then( m => m.GestionarUsuariosPageModule)
+  },
+  {
+    path: 'gestionar-alumnos',
+    loadChildren: () => import('./pages/admin/gestionar-alumnos/gestionar-alumnos.module').then( m => m.GestionarAlumnosPageModule)
   },
   
  

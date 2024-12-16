@@ -33,7 +33,13 @@ export class AuthService {
     });
   }
 
-  deleteUserByUid(usuarioId: string) {
-
+  eliminarUsuario(uid: string) {
+    return this.afAuth.currentUser.then(user => {
+      return user?.delete();
+    }).catch(error => {
+      console.error('Error eliminando usuario de Firebase Authentication', error);
+      return Promise.reject(error);
+    });
   }
+  
 }  

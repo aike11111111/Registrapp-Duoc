@@ -51,7 +51,6 @@ export class AsignaturasPage implements OnInit {
   }
 
   cargarDocentesyAlumnos() {
-    // Lógica para determinar el tipo de usuario y cargar datos
     if (this.tipoUsuario === 'docente') {
       this.docentesService.cargarDocente(this.uidUsuario).subscribe(
         docente => {
@@ -84,8 +83,7 @@ export class AsignaturasPage implements OnInit {
         this.asignaturasDocente = asignaturasDocente;
         console.log('Asignaturas del docente cargadas:', this.asignaturasDocente);
         
-        // Aquí puedes seguir con el flujo para cargar las asignaturas según tus necesidades
-        const aids = this.asignaturasDocente.map(ad => ad.aid); // Suponiendo que 'aid' es el campo correcto
+        const aids = this.asignaturasDocente.map(ad => ad.aid); 
         this.cargarAsignaturas(aids);
       },
       (error) => {
@@ -100,16 +98,14 @@ export class AsignaturasPage implements OnInit {
 
         this.alumnosService.getSeccionesIdsPorAlumno(this.idAlumno).subscribe(idsSecciones => {
             this.seccionesService.getSeccionesPorIds(idsSecciones).subscribe(secciones => {
-                // Crear un mapeo entre nombres y IDs
                 this.seccionesMap = secciones.reduce((map, seccion) => {
                     map[`${seccion.nombre_seccion}`] = { 
-                        id_seccion: seccion.id_seccion, // Asegúrate de que id_seccion es un string
-                        aid: seccion.aid // Asegúrate de que aid es un string
+                        id_seccion: seccion.id_seccion, 
+                        aid: seccion.aid 
                     };
                     return map;
-                }, {} as { [key: string]: { id_seccion: string; aid: string } }); // Aquí defines el tipo correcto
+                }, {} as { [key: string]: { id_seccion: string; aid: string } }); 
 
-                // Cargar las asignaturas
                 const idsAsignaturas = [...new Set(secciones.map(seccion => seccion.aid))];
                 this.asignaturasService.getAsignaturasPorIds(idsAsignaturas).subscribe(asignaturas => {
                     this.asignaturas = asignaturas.map(asignatura => ({

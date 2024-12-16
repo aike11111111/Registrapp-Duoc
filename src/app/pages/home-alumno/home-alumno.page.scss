@@ -1,38 +1,92 @@
+/* Estilo para la imagen dentro de la tarjeta */
 ion-card img {
-  width: 100%;  
-  height: auto; 
-  object-fit: cover; 
-  border-top-left-radius: 20px; 
-  border-top-right-radius: 20px; 
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
-
+/* Estilo general de las tarjetas */
 ion-card {
-  margin: 15px; 
-  border-radius: 20px; 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  overflow: hidden; 
-  background-color: #08080852;
+  margin: 15px;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: #08080852; /* Fondo con transparencia, sin color blanco */
 }
 
-ion-card-title{
+/* Estilo para las tarjetas con efecto de movimiento */
+.admin-card {
+  border-radius: 15px;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Transición para la sombra y transformación */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  position: relative; /* Necesario para colocar la superposición sobre la imagen */
+}
+
+.admin-card:hover {
+  transform: scale(1.00);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Sombra más grande en hover */
+}
+
+/* Estilo para la imagen dentro de la tarjeta */
+.card-image-wrapper {
+  position: relative;
+}
+
+img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Oscurece la imagen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out; /* Transición para la opacidad */
+}
+
+.card-image-wrapper:hover .card-overlay {
+  opacity: 1; /* Muestra la superposición al hacer hover */
+}
+
+.card-overlay ion-card-title {
+  color: white;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+ion-card-title {
   font-size: 20px;
 }
 
-ion-list{
-  background-color: rgb(34, 33, 33);
-}
-
-ion-toolbar {
-  --background: #000000;
-  color: white; 
-}
-
-ion-button{
+ion-button {
   max-height: 15px;
   font-size: 13px;
 }
 
-.container-bienv ion-card{
-  background-color: rgb(0, 0, 0);
+/* Estilo para la barra de herramientas */
+ion-toolbar {
+  --background: #000000; /* Fondo negro */
+  color: white; /* Texto blanco en la barra */
+}
+
+/* Estilo para los botones */
+ion-button {
+  max-height: 15px;
+  font-size: 13px;
+}
+
+.card-spacing{
+  background-color: rgba(52, 53, 53, 0.288);
 }

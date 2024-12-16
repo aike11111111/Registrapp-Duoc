@@ -33,7 +33,7 @@ export class DetalleSeccionPage implements OnInit {
   textoInterno: string = '';
   aidqr: string = '';
   id_seccionqr: string = '';
-  presentingElement: Element | null = null; // Mantenida según tu solicitud
+  presentingElement: Element | null = null; 
   nombreAsignatura: string | null = null;
   qrGenerado: boolean = false;
   numeroDeAlumnos: number = 0;
@@ -75,13 +75,11 @@ export class DetalleSeccionPage implements OnInit {
   async cerrarAsistenciaSeccion() {
     console.log("Iniciando el cierre de asistencia...");
 
-    // Verificar si la asistencia ya ha sido cerrada
     if (this.asistenciaCerrada) {
         this.mostrarAlerta('Error', 'La asistencia ya ha sido cerrada.', 'error');
         return;
     }
     
-    // Verificación del código QR y separación
     if (!this.textoInterno) {
         this.mostrarAlerta('Error', 'El código QR no ha sido generado aún.', 'error');
         return;
@@ -91,12 +89,10 @@ export class DetalleSeccionPage implements OnInit {
     this.aidqr = aidqr;
     this.id_seccionqr = id_seccionqr;
 
-    // Validación de coincidencia de secciones
     if (this.id_seccion === this.id_seccionqr && this.aid === this.aidqr) {
         console.log("ID de sección y asignación coinciden, procediendo...");
 
         try {
-            // Obtener IDs de alumnos por sección
             const idsAlumnos = await new Promise<string[]>((resolve, reject) => {
                 this.alumnoSeccionService.getAlumnosByIdSeccion(this.id_seccionqr).subscribe(alumnosEncontrados => {
                     console.log("Alumnos encontrados:", alumnosEncontrados);
@@ -112,25 +108,22 @@ export class DetalleSeccionPage implements OnInit {
                 });
             });
 
-            // Conteo de presentes
             const { count: presentesCount, ids: presentesIds } = await this.asistenciaService.contarPresentes(this.aidqr, this.id_seccionqr);
             console.log("Presentes encontrados:", presentesCount, " IDs:", presentesIds);
             
             const ausentesIds = idsAlumnos.filter(id => !presentesIds.includes(id));
             console.log("IDs de alumnos ausentes:", ausentesIds);
 
-            // Registro de presentes
             await this.asistenciaService.registrarAsistenciaSeccion(this.aidqr, this.id_seccionqr, this.idDocente, presentesCount, idsAlumnos.length - presentesCount);
 
-            // Registro de ausentes
-            if (ausentesIds.length > 0) { // Cambiar >= 0 a > 0 para evitar registros vacíos
+            if (ausentesIds.length > 0) { 
                 console.log("Registrando ausentes...");
                 await this.asistenciaService.registrarAusentes(ausentesIds, this.aidqr, this.id_seccionqr);
             }
 
-            // Actualizar la bandera de estado de asistencia cerrada
-            this.asistenciaCerrada = true; // Marcar como cerrada
+            this.asistenciaCerrada = true;
             console.log("Asistencia cerrada con éxito.");
+            this.mostrarAlerta('Éxito', 'La asistencia ha sido cerrada con éxito.', 'success');
         } catch (error) {
             console.error("Error al cerrar la asistencia:", error);
             this.mostrarAlerta('Error', 'No se pudo cerrar la asistencia. Intenta nuevamente.', 'error');
@@ -197,10 +190,8 @@ export class DetalleSeccionPage implements OnInit {
               };
             });
 
-            // Aquí puedes obtener el número total de alumnos
             this.numeroDeAlumnos = this.alumnosConNombres.length;
             console.log(`Número de alumnos en la sección: ${this.numeroDeAlumnos}`);
-            // También puedes hacer algo más con este número, como mostrarlo en la interfaz de usuario
           }, error => {
             console.error('Error al obtener nombres de los usuarios:', error);
           });
@@ -235,15 +226,14 @@ export class DetalleSeccionPage implements OnInit {
   generarQR(nombre_seccion: string): boolean {
     if (this.asistenciaCerrada) {
         this.texto = 'La asistencia ya ha sido cerrada. No se puede generar el código QR.';
-        this.qrGenerado = false; // No se generó el QR
-        // Aquí puedes usar un servicio de alerta para mostrar el mensaje
-        alert(this.texto); // Ejemplo simple de alerta
+        this.qrGenerado = false; 
+        alert(this.texto); 
         return false;
     }
 
     if (!this.nombreAsignatura || !nombre_seccion) {
         this.texto = 'Información no disponible';
-        this.qrGenerado = false; // Asegúrate de establecer en false si no se genera
+        this.qrGenerado = false; 
         return false;
     } else {
         console.log('horario', this.horario);
@@ -252,7 +242,7 @@ export class DetalleSeccionPage implements OnInit {
             const [dia, rangoHorario] = diaHorario.trim().split(' ');
             const [horaInicio, horaFin] = rangoHorario.split('-');
             return {
-                dia: dia.toLowerCase(),  // Convertir a minúsculas para comparar
+                dia: dia.toLowerCase(),  
                 horaInicio: horaInicio,
                 horaFin: horaFin
             };
@@ -264,21 +254,18 @@ export class DetalleSeccionPage implements OnInit {
         const zonaHorariaChile = 'America/Santiago';
         const fechaHoraLocal = toZonedTime(now, zonaHorariaChile);
         const formattedFechaHora = format(fechaHoraLocal, 'yyyy-MM-dd HH:mm:ss');
-        const horaActual = formattedFechaHora.substring(11, 16); // Formato HH:MM
+        const horaActual = formattedFechaHora.substring(11, 16); 
         
-        // Ajustar el cálculo del día actual
-        const diaActualIndex = now.getHours() === 0 ? 1 : now.getDay() + 1; // 0 = domingo, 1 = lunes, ...
+        const diaActualIndex = now.getHours() === 0 ? 1 : now.getDay() + 1;
         const diasDeLaSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-        const diaActual = diasDeLaSemana[diaActualIndex % 7]; // Ajustar para que domingo a medianoche sea lunes
+        const diaActual = diasDeLaSemana[diaActualIndex % 7]; 
 
         console.log('Día actual:', diaActual);
         console.log('Hora actual:', horaActual);
 
-        // Verificar si el día y hora actual están dentro del horario
         const horarioActivo = diasHorarios.some(item => {
             const { dia, horaInicio, horaFin } = item;
 
-            // Convertir horas a minutos desde medianoche para comparar fácilmente
             const [hiHoras, hiMinutos] = horaInicio.split(':').map(Number);
             const [hfHoras, hfMinutos] = horaFin.split(':').map(Number);
             const [haHoras, haMinutos] = horaActual.split(':').map(Number);
@@ -287,7 +274,6 @@ export class DetalleSeccionPage implements OnInit {
             const minutosFin = hfHoras * 60 + hfMinutos;
             const minutosActual = haHoras * 60 + haMinutos;
 
-            // Ajustar para los rangos que cruzan medianoche
             if (minutosFin < minutosInicio) {
                 return (minutosActual >= minutosInicio || minutosActual <= minutosFin);
             } else {
@@ -298,15 +284,14 @@ export class DetalleSeccionPage implements OnInit {
         console.log('Horario activo:', horarioActivo);
 
         if (horarioActivo) {
-            // Solo genera el código QR si hay horario activo
             this.textoInterno = `${this.aid}-${this.id_seccion}`;
             this.texto = `${this.nombreAsignatura}-${nombre_seccion}`;
-            this.qrGenerado = true; // Se generó el QR
+            this.qrGenerado = true; 
             console.log(this.texto);
             return true;
         } else {
             this.texto = 'Horario no activo. No se puede generar el código QR.';
-            this.qrGenerado = false; // No se generó el QR
+            this.qrGenerado = false; 
             console.log('Horario no activo. No se puede generar el código QR.');
             return false;
         }
@@ -314,7 +299,6 @@ export class DetalleSeccionPage implements OnInit {
 }
 
   async abrirModal() {
-    // Verificar si el QR fue generado
     const qrGenerado = this.generarQR(this.nombre_seccion);
     
     if (!qrGenerado) {

@@ -1,0 +1,9 @@
+ion-card img{
+    width: 100%;
+    height: 250px;
+    object-fit: cover; /* La imagen cubre el espacio sin distorsionarse */
+    border-top-left-radius: 15px; /* Bordes redondeados en la parte superior */
+    border-top-right-radius: 15px; /* Bordes redondeados en la parte superior */
+
+}
+

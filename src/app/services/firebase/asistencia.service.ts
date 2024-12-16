@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { format, toZonedTime } from 'date-fns-tz';
+import { Observable } from 'rxjs';
 import { SeccionesService } from 'src/app/services/firebase/secciones.service';
 
 @Injectable({
@@ -19,19 +20,18 @@ export class AsistenciaService {
         const docId = `${aid}_${idSeccion}_${formattedFechaHora}`;
         const asistenciaRef = this.angularFirestore.doc(`asistencia_alumno/${docId}`);
 
-        // Preparamos el objeto de asistencia que se añadirá o actualizará
         const asistenciaData = {
-            id_asist_a: this.angularFirestore.createId(), // Generar un nuevo ID
+            id_asist_a: this.angularFirestore.createId(), 
             aid: aid,
             id_seccion: idSeccion,
             fecha: formattedFechaHora,
             asistencias: [
-                { id_alumno: idAlumno, estado: 'presente' } // Guardamos el estado del alumno por su ID
+                { id_alumno: idAlumno, estado: 'presente' } 
             ]
         };
 
         try {
-            // Usamos set con merge: true para crear o actualizar el documento
+       
             await asistenciaRef.set(asistenciaData, { merge: true });
             console.log('Asistencia registrada con éxito');
         } catch (error) {
@@ -75,8 +75,6 @@ export class AsistenciaService {
         }
     }
 
-
-    // Método para registrar asistencia en una sección específica
     async registrarAsistenciaSeccion(aid: string, idSeccion: string, idDocente: string, cantPresentes: number, cantAusentes: number) {
     const now = new Date();
     const zonaHorariaChile = 'America/Santiago';
@@ -84,9 +82,6 @@ export class AsistenciaService {
     const formattedFechaHora = format(fechaHoraLocal, 'yyyy-MM-dd HH:mm:ss');
 
         try {
-            // Llamamos a la función contarPresentes para obtener el número de alumnos presentes
-            // Esta línea se puede eliminar si ya estás pasando 'cantPresentes' como parámetro
-            // const cantPresentes = await this.contarPresentes(aid, idSeccion);
 
             const asistenciaSeccionData = {
                 id_asist_s: this.angularFirestore.createId(),
@@ -106,8 +101,7 @@ export class AsistenciaService {
     }
 
     async registrarAusentes(idsAlumnos: string[], aid: string, idSeccion: string) {
-    // Obtener el horario de la sección usando el servicio
-    // Consultar Firestore para documentos específicos de fecha, id y sección
+    
     const snapshot = await this.angularFirestore.collection('asistencia_alumno', ref =>
         ref.where('aid', '==', aid)
             .where('id_seccion', '==', idSeccion)
@@ -115,24 +109,20 @@ export class AsistenciaService {
 
     if (!snapshot || snapshot.empty) {
         console.error('No se encontró el documento para actualizar.');
-        return; // Salir si no se encuentra el documento
+        return; 
     }
 
-    // Preparar las nuevas ausencias
     const nuevasAusencias = idsAlumnos.map(idAlumno => ({
         id_alumno: idAlumno,
         estado: 'ausente'
     }));
 
-    // Recorrer los documentos encontrados para actualizar sus ausencias
     const promises = snapshot.docs.map(async doc => {
         const data = doc.data() as any;
         const existingAsistencias = Array.isArray(data.asistencias) ? data.asistencias : [];
 
-        // Combinar las asistencias existentes con las nuevas ausencias
         const updatedAsistencias = [...existingAsistencias, ...nuevasAusencias];
 
-        // Actualizar el documento con el conjunto combinado
         return this.angularFirestore.doc(`asistencia_alumno/${doc.id}`).update({
             asistencias: updatedAsistencias
         });
@@ -145,4 +135,13 @@ export class AsistenciaService {
         console.error('Error al registrar ausencias:', error);
     }
     }
+
+    getAsistenciaPorFecha(aid: string, idSeccion: string, fecha: string): Observable<any[]> {
+        return this.angularFirestore.collection('asistencia_alumno', ref =>
+          ref.where('aid', '==', aid)
+             .where('id_seccion', '==', idSeccion)
+             .where('fecha', '>=', fecha + ' 00:00:00')
+             .where('fecha', '<=', fecha + ' 23:59:59')
+        ).valueChanges();
+      }      
     }

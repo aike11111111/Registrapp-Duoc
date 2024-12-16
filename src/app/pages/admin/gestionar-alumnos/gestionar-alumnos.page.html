@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Gestionar Inscripciones</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="alumnosInscripcionForm">
+    <ion-item>
+      <ion-label position="floating">Nombre de Alumno</ion-label>
+      <ion-select formControlName="id_alumno" [(ngModel)]="selectedAlumno" placeholder="Seleccione un alumno">
+        <ion-select-option *ngFor="let alumno of alumnosConNombres" [value]="alumno.id_alumno">
+          {{ alumno.nombre }} {{ selectedAlumno }} 
+        </ion-select-option>
+      </ion-select>
+    </ion-item>    
+
+    <ion-item>
+      <ion-select label="Asignatura" formControlName="asignatura" [(ngModel)]="selectedAsignatura" labelPlacement="floating" placeholder="Seleccione una asignatura">
+        <ion-select-option *ngFor="let asignatura of asignaturas" [value]="asignatura.aid">
+          {{ asignatura.nombre_asignatura }} {{ selectedAsignatura }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="full" color="dark" type="button" (click)="inscribirAlumno()">
+      Guardar Inscripción
+    </ion-button>
+  </form>
+
+  <br><br>
+
+  <form [formGroup]="alumnosInscripcionForm" (ngSubmit)="buscarAsignaturas()">
+    <ion-item>
+      <ion-select label="Seleccionar Alumno" formControlName="id_alumno" [(ngModel)]="selectedAlumno" labelPlacement="floating" placeholder="Seleccione un alumno">
+        <ion-select-option *ngFor="let alumno of alumnosConNombres" [value]="alumno.id_alumno">
+          {{ alumno.nombre }} {{ selectedAlumno }} 
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-button expand="full" color="dark" type="submit" [disabled]="!selectedAlumno">Buscar Asignaturas</ion-button>
+
+    <ion-list *ngIf="asignaturasInscritas.length > 0">
+      <ion-list-header>
+        <ion-label>Asignaturas Inscritas</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let asignatura of asignaturasInscritas">
+        {{ asignatura.nombre_asignatura }} {{ asignatura.aid }}
+        <ion-button fill="outline" color="danger">
+          Eliminar Asignatura
+        </ion-button>
+            
+        <div class="btn-asig_inscritas">
+          <ion-button fill="outline" color="success" (click)="abrirModal(asignatura.aid)">
+            Inscribir Sección
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-list>
+    
+    <ion-item *ngIf="asignaturasInscritas.length === 0">
+      <ion-label>No hay asignaturas inscritas</ion-label>
+    </ion-item>
+  </form>
+
+<!-- Mostrar los documentos filtrados -->
+<ion-list *ngIf="documentosFiltrados.length > 0">
+  <ion-list-header>
+    <ion-label>Documentos de Inscripción</ion-label>
+  </ion-list-header>
+
+  <ion-item *ngFor="let doc of documentosFiltrados">
+    <ion-label>
+      <p>Asignatura: {{ doc.aid }}</p>  <!-- Mostrar el aid de la asignatura -->
+      <p>Alumno: {{ doc.id_alumno }}</p>  <!-- Mostrar el id_alumno -->
+    </ion-label>
+  </ion-item>
+</ion-list>
+
+<ion-item *ngIf="documentosFiltrados.length === 0">
+  <ion-label>No se encontraron documentos que coincidan.</ion-label>
+</ion-item>
+</ion-content>

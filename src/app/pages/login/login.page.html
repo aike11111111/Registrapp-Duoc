@@ -34,12 +34,12 @@
         La contraseña debe tener mínimo 6 caracteres
       </ion-text>
 
-      <ion-button expand="full" color="light" (click)="login()" class="button">Ingresar</ion-button> 
-      <ion-button expand="full" routerLink="/register">Registrarse</ion-button>
+      <ion-button expand="full" color="dark" (click)="login()" class="button">Ingresar</ion-button> 
+      <ion-button expand="full" color="dark" routerLink="/register">Registrarse</ion-button>
 
       <ion-item lines="none">
         <ion-label>
-          <a (click)="recuperarContrasena()">¿Olvidaste tu contraseña?</a>
+          <a (click)="recovery()">¿Olvidaste tu contraseña?</a>
         </ion-label>
       </ion-item>
     </ion-card-content>

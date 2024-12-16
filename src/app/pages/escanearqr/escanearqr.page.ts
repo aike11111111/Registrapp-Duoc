@@ -88,7 +88,6 @@ export class EscanearqrPage implements OnDestroy {
           nombre_asignatura: this.getNombreAsignatura(seccion.aid),
         }));
 
-        // Filtrar la sección seleccionada
         this.secciones = this.secciones.filter(seccion => seccion.id_seccion === this.id_seccion && seccion.aid === this.aid);
         
         this.isLoading = false;
@@ -158,8 +157,7 @@ export class EscanearqrPage implements OnDestroy {
     console.log('Nombre de asignatura:', nombre_asignatura);
     console.log('Nombre de sección:', nombre_seccion);
   
-    // Verifica si la sección y asignatura son las actuales
-    const seccionActual = this.secciones[0]; // Asumiendo que secciones tiene un solo elemento
+    const seccionActual = this.secciones[0]; 
   
     if (seccionActual) {
       if (nombre_asignatura === seccionActual.nombre_asignatura && nombre_seccion === seccionActual.nombre_seccion) {
@@ -179,7 +177,7 @@ export class EscanearqrPage implements OnDestroy {
       console.log('Inscripción verificada:', seccionInscrita);
   
       if (seccionInscrita) {
-        // Registrar asistencia y estado 'presente'
+
         await this.asistenciaService.registrarAsistencia(this.idAlumno, seccion.id_seccion, seccion.aid);
         this.mostrarAlerta('Registro Exitoso', 'La asistencia ha sido registrada con éxito.', 'success');
       } else {

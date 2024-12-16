@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ id_seccion ? 'Editar Sección' : 'Agregar Sección' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="agregarSeccionForm" (ngSubmit)="id_seccion ? editarSeccion(id_seccion) : guardarSeccion()">
+    <ion-item>
+      <ion-input label="Nombre de Sección" type="text" formControlName="nombre_seccion" labelPlacement="floating" placeholder="Ingrese nombre"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select label="Asignatura" label-placement="floating" formControlName="aid" placeholder="Seleccione una asignatura">
+        <ion-select-option *ngFor="let asignatura of asignaturas" [value]="asignatura.aid">
+          {{ asignatura.nombre_asignatura }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Horario" type="text" formControlName="horario" labelPlacement="floating" placeholder="ej: martes 10:30-06:50, viernes 09:50-16:30"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Sala" type="text" formControlName="sala" labelPlacement="floating" placeholder="Ingrese la sala"></ion-input>
+    </ion-item>
+    <ion-button color="dark" type="submit">
+      {{ id_seccion ? 'Actualizar Sección' : 'Guardar Sección' }}
+    </ion-button>
+  </form>
+</ion-content>

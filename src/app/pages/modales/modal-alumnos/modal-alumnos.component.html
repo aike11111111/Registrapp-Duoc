@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="asignarSeccionForm" (ngSubmit)="inscribirEnSeccion()">
+    <ion-item>
+      <ion-label position="floating">Nombre Sección</ion-label>
+      <ion-select formControlName="id_seccion" placeholder="Seleccione una sección">
+        <ion-select-option *ngFor="let seccion of seccionesDisponibles" [value]="seccion.id_seccion">
+          {{ seccion.nombre_seccion }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Botones centrados -->
+    <ion-row class="ion-justify-content-center">
+      <!-- Botón para confirmar asignación -->
+      <ion-col size="auto">
+        <ion-button expand="block" color="dark" type="submit">
+          Confirmar 
+        </ion-button>
+      </ion-col>
+
+      <!-- Botón para editar la sección -->
+      <ion-col size="auto" *ngIf="detallesSeccion">
+        <ion-button expand="block" color="dark" (click)="editarSeccion()">
+          Editar 
+        </ion-button>
+      </ion-col>
+
+      <!-- Botón para eliminar la sección -->
+      <ion-col size="auto" *ngIf="detallesSeccion">
+        <ion-button expand="block" color="dark" (click)="eliminarSeccion()">
+          Eliminar 
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>

@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { combineLatest, map, Observable, tap } from 'rxjs';
+import { combineLatest, map, Observable, switchMap, tap } from 'rxjs';
 import { AlumnoSeccion } from 'src/app/interfaces/alumno-seccion';
 import { Asignatura } from 'src/app/interfaces/asignatura';
+import { AsignaturaSeccion } from 'src/app/interfaces/asignatura-seccion';
 import { Seccion } from 'src/app/interfaces/seccion';
 
 @Injectable({
@@ -30,8 +31,7 @@ export class SeccionesService {
     return this.firestore.collection<Seccion>('secciones', ref => ref.where('id_seccion', 'in', idsSeccion)).snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
-          const data = a.payload.doc.data() as Seccion; // Mapea cada documento a su estructura
-          // Retorna solo los datos de la sección, sin el ID del documento
+          const data = a.payload.doc.data() as Seccion; 
           return {
             id_seccion: data.id_seccion,
             nombre_seccion: data.nombre_seccion,
@@ -56,4 +56,23 @@ export class SeccionesService {
       })
     );
   }*/
+  getSeccionesPorAsignatura(aid: string): Observable<Seccion[]> {
+    return this.firestore.collection<AsignaturaSeccion>('asignaturas_seccion', ref => ref.where('aid', '==', aid))
+      .snapshotChanges()
+      .pipe(
+        map(actions => actions.map(a => (a.payload.doc.data() as AsignaturaSeccion).id_seccion)),
+        switchMap(seccionIds => {
+          return this.firestore.collection<Seccion>('secciones', ref => ref.where('id_seccion', 'in', seccionIds))
+            .snapshotChanges()
+            .pipe(
+              map(actions => actions.map(a => {
+                const data = a.payload.doc.data() as Seccion;
+                return { id: a.payload.doc.id, ...data };
+              }))
+            );
+        })
+      );
+  }
+
+  
 }

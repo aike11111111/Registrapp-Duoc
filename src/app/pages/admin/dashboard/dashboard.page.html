@@ -1,45 +1,47 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-buttons slot="end">
       <ion-button (click)="logout()">
         <ion-icon name="log-out"></ion-icon>
       </ion-button>
-      <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Administración</ion-title>
+    <ion-title>Panel de Administración</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content style="background: #f7f7f7;">
   <div class="container-bienv">
-    <ion-card>
+    <ion-card class="full-width-card" style="box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
       <ion-card-header>
-        <ion-card-title>Hola,</ion-card-title>
+        <ion-card-title>Bienvenido al Sistema</ion-card-title>
       </ion-card-header>
-    
       <ion-card-content>
-        Bienvenido al sistema, aquí puedes añadir, editar y borrar en cada módulo.
+        Aquí puedes añadir, editar y borrar en cada módulo.
       </ion-card-content>
     </ion-card>
-  </div>
-  
+  </div>  
+
   <ion-grid>
     <ion-row class="no-margin">
       <ion-col size="6">
         <ion-card class="admin-card" routerLink="/gestionar-asignaturas">
-          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-          <ion-card-header>
-            <ion-card-title>Asignaturas</ion-card-title>
-          </ion-card-header>
+          <div class="card-image-wrapper">
+            <img alt="Asignaturas" src="assets/img/user (2).webp" />
+            <div class="card-overlay">
+              <ion-card-title>Asignaturas</ion-card-title>
+            </div>
+          </div>
         </ion-card>
       </ion-col>
   
       <ion-col size="6">
         <ion-card class="admin-card" routerLink="/gestionar-secciones">
-          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-          <ion-card-header>
-            <ion-card-title>Secciones</ion-card-title>
-          </ion-card-header>
+          <div class="card-image-wrapper">
+            <img alt="Secciones" src="assets/img/user (3).webp" />
+            <div class="card-overlay">
+              <ion-card-title>Secciones</ion-card-title>
+            </div>
+          </div>
         </ion-card>
       </ion-col>
     </ion-row>
@@ -47,19 +49,23 @@
     <ion-row class="no-margin">
       <ion-col size="6">
         <ion-card class="admin-card" routerLink="/gestionar-usuarios">
-          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-          <ion-card-header>
-            <ion-card-title>Usuarios</ion-card-title>
-          </ion-card-header>
+          <div class="card-image-wrapper">
+            <img alt="Usuarios" src="assets/img/user (1).webp" />
+            <div class="card-overlay">
+              <ion-card-title>Usuarios</ion-card-title>
+            </div>
+          </div>
         </ion-card>
       </ion-col>
   
       <ion-col size="6">
-        <ion-card class="admin-card">
-          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-          <ion-card-header>
-            <ion-card-title>Opción Adicional</ion-card-title>
-          </ion-card-header>
+        <ion-card class="admin-card" routerLink="/gestionar-alumnos">
+          <div class="card-image-wrapper">
+            <img alt="Alumnos" src="assets/img/user (1).png" />
+            <div class="card-overlay">
+              <ion-card-title>Inscripciones</ion-card-title>
+            </div>
+          </div>
         </ion-card>
       </ion-col>
     </ion-row>

@@ -7,7 +7,7 @@
   import { GestionarSeccionesPageRoutingModule } from './gestionar-secciones-routing.module';
 
   import { GestionarSeccionesPage } from './gestionar-secciones.page';
-import { GestionarModalComponent } from '../../modales/gestionar-modal/gestionar-modal.component';
+import { ModalSeccionesComponent } from '../../modales/modal-secciones/modal-secciones.component';
 
   @NgModule({
     imports: [
@@ -18,7 +18,7 @@ import { GestionarModalComponent } from '../../modales/gestionar-modal/gestionar
       ReactiveFormsModule, 
       FormsModule
     ],
-    declarations: [GestionarSeccionesPage, GestionarModalComponent],
-    exports: [GestionarModalComponent]
+    declarations: [GestionarSeccionesPage, ModalSeccionesComponent],
+    exports: [ModalSeccionesComponent]
   })
   export class GestionarSeccionesPageModule {}
